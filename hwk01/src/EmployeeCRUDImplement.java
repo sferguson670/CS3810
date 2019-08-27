@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.Scanner;
-import java.io.FileNotFoundException;
 
 public class EmployeeCRUDImplement implements EmployeeCRUD {
 
@@ -16,11 +15,13 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
             while (in.hasNextLine()) {
                 String line = in.nextLine();
-                //scanner breaks line up into employee elements
+                //ignoring delete employees
+                if (line.charAt(0) == '#')
+                        continue;
+
+                //break line into employee aspects
                 String data[] = line.split(",");
                 int id = Integer.parseInt(data[0]);
-                String name = data[1];
-                String department = data[2];
                 if (id == employee.getId()) {
                     found = true;
                     break;
@@ -52,12 +53,15 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
             while (in.hasNextLine()) {
                 String line = in.nextLine();
+                //ignoring deleted employees
+                if (line.charAt(0) == '#')
+                    continue;
+
                 String data[] = line.split(",");
                 int key = Integer.parseInt(data[0]);
                 if (id == key) {
                     String name = data[1];
                     String dep = data[2];
-                    //creates new employee with data array elements
                     Employee employee = new Employee(id, name, dep);
                     in.close();
                     return employee;
@@ -86,6 +90,8 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
                     employee.setName(name);
                     employee.setDepartment(dep);
                     in.close();
+                    //to make sure program is working
+                    System.out.println("Employee with id " + id + " has been updated.");
                 }
             }
             in.close();
@@ -120,7 +126,17 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
         EmployeeCRUDImplement implement = new EmployeeCRUDImplement();
 
         //just a hard coded employee for now...
-        Employee employee = new Employee(2, "Joe", "IT");
-        implement.create(employee);
+        Employee employee1 = new Employee(2, "Joe", "IT");
+        Employee employee2 = new Employee(2, "Sam", "Sales");
+        Employee employee3 = new Employee(55, "Emily", "Management");
+        Employee employee4 = new Employee(4, "Hannah", "Board");
+        //practicing Create function
+        implement.create(employee1);
+        //practicing Read function
+        implement.read(4);
+        //practicing Update function
+        implement.update(2, employee2);
+        //practicing Delete function
+        //implement.delete(55);
     }
 }
