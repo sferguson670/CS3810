@@ -132,3 +132,8 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
 
     }
 }
+
+/*Reflection: To make the CRUD operation more efficient, employees should be organized numerically. Then, we can do a id comparison rather than\
+ searching through all entries. The time/cost difference would be more apparent when there is a greater number of entries.
+ */
+
