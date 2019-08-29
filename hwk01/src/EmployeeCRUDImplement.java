@@ -8,8 +8,8 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
 
     @Override
     public void create(Employee employee) {
-        //opens the file for read
-        //loop through all lines of the file
+        //method to make sure there is no employee with same ID
+
         boolean found = false;
         try {
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
@@ -49,6 +49,8 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
 
     @Override
     public Employee read(int id) {
+        //creates employee with all data filled
+
         try {
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
             while (in.hasNextLine()) {
@@ -77,6 +79,8 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
 
     @Override
     public void update (int id, Employee employee) {
+        //reads ID and updates information to employee with associated id
+
         try {
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
             while (in.hasNextLine()) {
@@ -84,11 +88,9 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
                 String data[] = line.split(",");
                 int key = Integer.parseInt(data[0]);
                 if (id == key) {
-                    String name = data[1];
-                    String dep = data[2];
                     //update name & department
-                    employee.setName(name);
-                    employee.setDepartment(dep);
+                    employee.setName(employee.getName());
+                    employee.setDepartment(employee.getDepartment());
                     in.close();
                     //to make sure program is working
                     System.out.println("Employee with id " + id + " has been updated.");
@@ -127,16 +129,16 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
 
         //just a hard coded employee for now...
         Employee employee1 = new Employee(2, "Joe", "IT");
-        Employee employee2 = new Employee(2, "Sam", "Sales");
-        Employee employee3 = new Employee(55, "Emily", "Management");
-        Employee employee4 = new Employee(4, "Hannah", "Board");
-        //practicing Create function
+        Employee employee2 = new Employee(3, "Sam", "Sales");
+        Employee employee3 = new Employee(5, "Joe", "IT Department Manager");
+
         implement.create(employee1);
-        //practicing Read function
-        implement.read(4);
-        //practicing Update function
-        implement.update(2, employee2);
-        //practicing Delete function
-        //implement.delete(55);
+        implement.create(employee2);
+
+        implement.read(employee1.getId());
+        implement.read(employee2.getId());
+
+        implement.update(employee1.getId(), employee3);
+
     }
 }
