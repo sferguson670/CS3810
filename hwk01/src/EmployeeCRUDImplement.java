@@ -9,7 +9,6 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
     @Override
     public void create(Employee employee) {
         //method to make sure there is no employee with same ID
-
         boolean found = false;
         try {
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
@@ -50,7 +49,6 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
     @Override
     public Employee read(int id) {
         //creates employee with all data filled
-
         try {
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
             while (in.hasNextLine()) {
@@ -80,32 +78,44 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
     @Override
     public void update (int id, Employee employee) {
         //reads ID and updates information to employee with associated id
-
+        boolean found = false;
         try {
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
             while (in.hasNextLine()) {
                 String line = in.nextLine();
+                //ignoring delete employees
+                if (line.charAt(0) == '#')
+                    continue;
                 String data[] = line.split(",");
                 int key = Integer.parseInt(data[0]);
                 if (id == key) {
-                    //update name & department
-                    data[1] = employee.getName();
-                    data[2] = employee.getDepartment();
-                    in.close();
-                    //to make sure program is working
-                    System.out.println("Employee with id " + id + " has been updated.");
+                    found = true;
+                    //data[1] = employee.getName();
+                    //data[2] = employee.getDepartment();
                     break;
                 }
             }
             in.close();
         }
-        catch (FileNotFoundException ex ) {
-            //ignoring...
+        catch (FileNotFoundException e) {
+            //ignoring ...
+        }
+        if (found) {
+            System.out.println("Employee with the ID " + id + " has been updated.");
+            try {
+                PrintStream out = new PrintStream(new FileOutputStream(EMPLOYEE_FILENAME, true));
+                out.println(id + "," + employee.getName() + "," + employee.getDepartment());
+                out.close();
+            }
+            catch (FileNotFoundException e){
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public void delete (int id) {
+        //deletes employee with associated id
         try {
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
             while (in.hasNextLine()) {
@@ -113,9 +123,9 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
                 String data[] = line.split(",");
                 int key = Integer.parseInt(data[0]);
                 if (id == key) {
-                    String name = data[1];
-                    String dep = data[2];
-                    in.close();
+
+                //to make sure program is working
+                System.out.println("Employee with ID " + id + " has been deleted.");
                 }
             }
             in.close();
@@ -135,7 +145,7 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
 
         implement.create(employee1);
         implement.create(employee2);
-        implement.create(employee3);
+        //implement.create(employee3);
 
         implement.read(employee1.getId());
         implement.read(employee2.getId());
