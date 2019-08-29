@@ -78,7 +78,12 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
     @Override
     public void update (int id, Employee employee) {
         //reads ID and updates information to employee with associated id
-
+        Employee temp = new Employee(id, "", "");
+        delete(id);
+        //rewrite employee information
+        temp.setName(employee.getName());
+        temp.setDepartment(employee.getDepartment());
+        create(temp);
     }
 
     @Override
@@ -117,7 +122,6 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
 
         implement.create(employee1);
         implement.create(employee2);
-        //implement.create(employee3);
 
         implement.read(employee1.getId());
         implement.read(employee2.getId());
