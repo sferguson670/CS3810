@@ -89,11 +89,12 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
                 int key = Integer.parseInt(data[0]);
                 if (id == key) {
                     //update name & department
-                    employee.setName(employee.getName());
-                    employee.setDepartment(employee.getDepartment());
+                    data[1] = employee.getName();
+                    data[2] = employee.getDepartment();
                     in.close();
                     //to make sure program is working
                     System.out.println("Employee with id " + id + " has been updated.");
+                    break;
                 }
             }
             in.close();
@@ -134,6 +135,7 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
 
         implement.create(employee1);
         implement.create(employee2);
+        implement.create(employee3);
 
         implement.read(employee1.getId());
         implement.read(employee2.getId());
