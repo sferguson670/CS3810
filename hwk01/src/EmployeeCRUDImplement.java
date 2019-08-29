@@ -78,21 +78,25 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
     @Override
     public void update (int id, Employee employee) {
         //reads ID and updates information to employee with associated id
-        boolean found = false;
+
+    }
+
+    @Override
+    public void delete (int id) {
+        //removes employee with associated id
+        File tempFile = new File("temp.csv");
         try {
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
             while (in.hasNextLine()) {
                 String line = in.nextLine();
-                //ignoring delete employees
                 if (line.charAt(0) == '#')
                     continue;
                 String data[] = line.split(",");
                 int key = Integer.parseInt(data[0]);
-                if (id == key) {
-                    found = true;
-                    //data[1] = employee.getName();
-                    //data[2] = employee.getDepartment();
-                    break;
+                if (id != key) {
+                    PrintStream out = new PrintStream(new FileOutputStream(tempFile, true));
+                    out.println(line);
+                    out.close();
                 }
             }
             in.close();
@@ -100,39 +104,7 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
         catch (FileNotFoundException e) {
             //ignoring ...
         }
-        if (found) {
-            System.out.println("Employee with the ID " + id + " has been updated.");
-            try {
-                PrintStream out = new PrintStream(new FileOutputStream(EMPLOYEE_FILENAME, true));
-                out.println(id + "," + employee.getName() + "," + employee.getDepartment());
-                out.close();
-            }
-            catch (FileNotFoundException e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void delete (int id) {
-        //deletes employee with associated id
-        try {
-            Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
-            while (in.hasNextLine()) {
-                String line = in.nextLine();
-                String data[] = line.split(",");
-                int key = Integer.parseInt(data[0]);
-                if (id == key) {
-
-                //to make sure program is working
-                System.out.println("Employee with ID " + id + " has been deleted.");
-                }
-            }
-            in.close();
-        }
-        catch (FileNotFoundException ex ) {
-            //ignoring...
-        }
+        tempFile.renameTo(new File(EMPLOYEE_FILENAME));
     }
 
     public static void main(String[] args) {
@@ -151,6 +123,8 @@ public class EmployeeCRUDImplement implements EmployeeCRUD {
         implement.read(employee2.getId());
 
         implement.update(employee1.getId(), employee3);
+
+        implement.delete(employee2.getId());
 
     }
 }
