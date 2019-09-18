@@ -17,7 +17,7 @@ CREATE TABLE Astronauts (
 	suffix		VARCHAR(5),
 	gender		CHAR(1),
 	birth		DATE,
-	city		VARCHAR(15),
+	city		VARCHAR(20),
 	state		VARCHAR(20),
 	country		VARCHAR(15),
 	status		VARCHAR(7),
