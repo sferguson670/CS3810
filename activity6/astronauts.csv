@@ -1,5 +1,5 @@
 lastName,firstName,suffix,gender,birth,city,state,country,status,daysInSpace,Flights
-Abrahamson,James,NULL,M,5/19/33,Williston,ND,USA,Retired,0,0
+Abrahamson,James,NULL,M,1933-05-19,Williston,ND,USA,Retired,0,0
 Acaba,Joseph,NULL,M,5/17/67,Inglewood,CA,USA,Active,137,2
 Acton,Loren,NULL,M,3/7/36,Lewistown,MT,USA,Retired,7,1
 Adams,Michael,NULL,M,5/5/30,Sacremento,CA,USA,Retired,0,0

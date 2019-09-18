@@ -27,7 +27,7 @@ CREATE TABLE Astronauts (
 
 -- load data
 LOAD DATA INFILE '/Users/sarahdee/Git/CS3810/activity6/astronauts.csv' INTO TABLE Astronauts
-FIELDS TERMINATED BY '.' IGNORE 1 ROWS (lastName, firstName, suffix, gender, birth, city,
-state, country, status, daysInSpace, flights);
+FIELDS TERMINATED BY ',' IGNORE 1 ROWS
+(lastName, firstName, suffix, gender, birth, city, state, country, status, daysInSpace, flights);
 
 -- run queries
