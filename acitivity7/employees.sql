@@ -32,7 +32,7 @@ INSERT INTO Employees(name, sal, deptCode) VALUES ('Romeo Curacau',      65000, 
 INSERT INTO Employees(name, sal, deptCode) VALUES ('Jose Caipirinha',    65000, 'IT');
 INSERT INTO Employees(name, sal, deptCode) VALUES ('Tony Gin and Tonic', 80000, 'SL');
 INSERT INTO Employees(name, sal, deptCode) VALUES ('Debby Derby',        85000, 'SL');
-INSERT INTO Employees(name, sal, deptCode) VALUES ('Mobid Mojito',       150000, 'SL');
+INSERT INTO Employees(name, sal, deptCode) VALUES ('Mobid Mojito',       150000, 'NULL');
 
 -- queries
 -- a) list all rows in Departments
@@ -70,9 +70,15 @@ SET @salCaipirinha := (SELECT sal FROM Employees WHERE name = 'Jose Caipirinha')
 SELECT * FROM Empkoyees A INNER JOIN Departments B ON A.deptCode = B.code WHERE sal > @salCaipirinha;
 
 -- m) list the left outer join of Employees and Departments (use the ON clause to match by department code); how does the result of this query differs from query 'i'?
+SELECT * FROM Employees A LEFT JOIN Departments B ON A.deptCode = B.code;
 
 -- n) from query 'm', how would you do the left anti-join?
+SELECT * FROM Employees A LEFT JOIN Departments B ON A.deptCode = B.code WHERE deptCode IS NULL;
 
 -- o) show the number of employees per department
+SELECT deptCode AS Department, COUNT(*) AS Total FROM Employees GROUP BY deptCode HAVING deptCode IS NOT NULL;
+
+SELECT deptCode AS Department, COUNT(*) AS Total FROM Employees WHERE deptCode IS NOT NULL GROUP BY deptCode;
 
 -- p) same as query 'o' but I want to see the description of each department (not just their codes).
+SELECT B.desc, A.total FROM (SELECT deptCode, COUNT(*) AS Total FROM Employees GROUP BY deptCode HAVING deptCode IS NOT NULL) A INNER JOIN Departments B ON A.deptCode = B.code;
