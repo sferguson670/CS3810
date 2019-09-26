@@ -5,15 +5,15 @@ CREATE DATABASE employees;
 USE employees;
 
 -- create table departments;
-CREATE TABLE Department(
+CREATE TABLE Departments (
 	code  CHAR(2)   PRIMARY KEY,
-	desc VARCHAR(25)   NOT NULL
+	`desc` VARCHAR(25)   NOT NULL
 );
 
 -- populate table departments
-INSERT INTO Department VALUES('HR', 'Human Resources');
-INSERT INTO Department VALUES('IT', 'Information Technology');
-INSERT INTO Department VALUES('SL', 'Sales');
+INSERT INTO Departments VALUES('HR', 'Human Resources');
+INSERT INTO Departments VALUES('IT', 'Information Technology');
+INSERT INTO Departments VALUES('SL', 'Sales');
 
 -- create table employees
 CREATE TABLE Employees(
@@ -21,7 +21,7 @@ CREATE TABLE Employees(
    name VARCHAR(30) NOT NULL, 
    sal INT NOT NULL, 
    deptCode CHAR(2),
-   FOREIGH KEY(deptCode) REFERENCES Department(code)
+   FOREIGN KEY (deptCode) REFERENCES Departments(code)
 );
 
 -- populate table Employees
@@ -32,7 +32,7 @@ INSERT INTO Employees(name, sal, deptCode) VALUES ('Romeo Curacau',      65000, 
 INSERT INTO Employees(name, sal, deptCode) VALUES ('Jose Caipirinha',    65000, 'IT');
 INSERT INTO Employees(name, sal, deptCode) VALUES ('Tony Gin and Tonic', 80000, 'SL');
 INSERT INTO Employees(name, sal, deptCode) VALUES ('Debby Derby',        85000, 'SL');
-INSERT INTO Employees(name, sal, deptCode) VALUES ('Mobid Mojito',       150000, 'NULL');
+INSERT INTO Employees(name, sal, deptCode) VALUES ('Mobid Mojito',       150000, NULL);
 
 -- queries
 -- a) list all rows in Departments
@@ -42,7 +42,7 @@ SELECT * FROM Departments;
 SELECT code FROM Departments;
 
 -- c) list all rows in Employees
-SELECT * FROM employees;
+SELECT * FROM Employees;
 
 -- d) list only the names in Employees in alphabetical order
 SELECT name FROM Employees ORDER BY name;
@@ -60,14 +60,14 @@ SELECT * FROM Employees NATURAL JOIN Departments;
 SELECT * FROM Employees A INNER JOIN Departments B ON A.deptCode = B.code;
 
 -- j) same as previous query but project name and salary of the meployees plus the description of their departments
-SELECT A.name, A.sal, B.'desc' FROM Employees A INNER JOIN Departments B ON A.deptCode = B.code;
+SELECT A.name, A.sal, B.`desc` FROM Employees A INNER JOIN Departments B ON A.deptCode = B.code;
 
 -- k) same as previous query but only the employees that earn less than 60000
-SELECT A.name, A.sal, B.'desc' FROM Employees A INNER JOIN Departments B ON A.deptCode = B.code WHERE  sal < 60000;
+SELECT A.name, A.sal, B.`desc` FROM Employees A INNER JOIN Departments B ON A.deptCode = B.code WHERE  sal < 60000;
 
 -- l) same as query 'i' but only the employees that earn more than 'Jose Caipirinha'
 SET @salCaipirinha := (SELECT sal FROM Employees WHERE name = 'Jose Caipirinha');
-SELECT * FROM Empkoyees A INNER JOIN Departments B ON A.deptCode = B.code WHERE sal > @salCaipirinha;
+SELECT * FROM Employees A INNER JOIN Departments B ON A.deptCode = B.code WHERE sal > @salCaipirinha;
 
 -- m) list the left outer join of Employees and Departments (use the ON clause to match by department code); how does the result of this query differs from query 'i'?
 SELECT * FROM Employees A LEFT JOIN Departments B ON A.deptCode = B.code;
