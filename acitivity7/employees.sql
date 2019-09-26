@@ -18,9 +18,9 @@ INSERT INTO Department VALUES('SL', 'Sales');
 -- create table employees
 CREATE TABLE Employees(
    id INT AUTO_INCREMENT PRIMARY KEY,
-   name varchar(30) NOT NULL, 
+   name VARCHAR(30) NOT NULL, 
    sal INT NOT NULL, 
-   deptCode varchar(2),
+   deptCode CHAR(2),
    FOREIGH KEY(deptCode) REFERENCES Department(code)
 );
 
@@ -63,7 +63,7 @@ SELECT * FROM Employees A INNER JOIN Departments B ON A.deptCode = B.code;
 SELECT A.name, A.sal, B.'desc' FROM Employees A INNER JOIN Departments B ON A.deptCode = B.code;
 
 -- k) same as previous query but only the employees that earn less than 60000
-SLECT A.name, A.sal, B.'desc' FROM Employees A INNER JOIN Departments B ON A.deptCode = B.code WHERE  sal < 60000;
+SELECT A.name, A.sal, B.'desc' FROM Employees A INNER JOIN Departments B ON A.deptCode = B.code WHERE  sal < 60000;
 
 -- l) same as query 'i' but only the employees that earn more than 'Jose Caipirinha'
 SET @salCaipirinha := (SELECT sal FROM Employees WHERE name = 'Jose Caipirinha');
