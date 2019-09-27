@@ -7,9 +7,9 @@ USE flowers;
 
 -- create table zones
 CREATE TABLE Zones(
-	id INTEGER(2) PRIMARY KEY,
-	lowerTemp INTEGER(3),
-	higherTemp INTEGER(3)
+	id INT(2) PRIMARY KEY,
+	lowerTemp INT(3) NOT NULL,
+	higherTemp INT(3) NOT NULL
 );
 
 -- populate table Zones
@@ -25,7 +25,7 @@ INSERT INTO Zones VALUES(10, 30, 40);
 
 -- create table deliveries
 CREATE TABLE Deliveries(
-	id INTEGER(1) PRIMARY KEY,
+	id INT(1) PRIMARY KEY,
 	categ VARCHAR(5),
 	delSize DECIMAL(5,3)
 );
@@ -43,7 +43,7 @@ INSERT INTO Deliveries VALUES(9, 'tree', 36.000);
 
 -- create table FlowersInfo
 CREATE TABLE FlowersInfo(
-	id INTEGER(3) PRIMARY KEY,
+	id INT(3) PRIMARY KEY,
 	comName VARCHAR(30),
 	latName VARCHAR(35),
 	cZone INTEGER,
@@ -66,6 +66,7 @@ INSERT INTO FlowersInfo VALUES(114, 'Thorndale Ivy', 'Hedera belix Thorndale', 3
 
 -- queries
 -- a) the total number of zones
+SELECT COUNT(*) AS Total FROM Zones;
 
 -- b) the number of flowers per cool zone
 
