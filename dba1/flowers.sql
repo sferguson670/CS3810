@@ -69,19 +69,40 @@ INSERT INTO FlowersInfo VALUES(114, 'Thorndale Ivy', 'Hedera belix Thorndale', 3
 SELECT COUNT(*) AS Total FROM Zones;
 
 -- b) the number of flowers per cool zone
+SELECT cZone AS Cool_Zone, COUNT(cZone) AS Total FROM FlowersInfo GROUP BY cZone ORDER BY cZone;
 
 -- c) common names of the plants that have delivery sizes less than 5
+SELECT CONCAT(comName) AS Name FROM FlowersInfo WHERE deliver < 5 ORDER BY comName;
 
 -- d) common names of the plants that require full sun (i.e., sun needs contains 'S')
+SELECT CONCAT(comName) AS Name FROM FlowersInfo WHERE sunNeeds = "S" ORDER BY comName;
 
 -- e) all delivery category names order alphabetically (without repetition)
+SELECT DISTINCT categ FROM Deliveries ORDER BY categ;
 
 -- f) the exact output (note that it is order by name)
+SELECT FlowersInfo.comName, Zones.lowerTemp, Zones.higherTemp, Deliveries.categ 
+FROM FlowersInfo
+INNER JOIN Zones ON FlowersInfo.cZone = Zones.id 
+INNER JOIN Deliveries ON FlowersInfo.deliver = Deliveries.id 
+ORDER BY FlowersInfo.comName;
 
 -- g) plant names that have the same hot zone as "pink Caladiums" (your solution MUST get the hot zone of "pink Caladiums" in a variable)
+SET @hotZonePinkCaladiums := (SELECT hZone FROM FlowersInfo WHERE comName = "Pink Caladiums");
+SELECT comName, latName FROM FlowersInfo WHERE hZone = @hotZonePinkCaladiums;
 
 -- h) the total number of plants, the minimum delivery size, the maximum delivery size, and the average size based on the plants that have delivery sizes (note that the average value should be rounded using two decimals)
+SELECT 
+(SELECT COUNT(DISTINCT categ) FROM Deliveries) AS Total,
+(SELECT TRUNCATE(MIN(delSize),2) FROM Deliveries) AS Min,
+(SELECT TRUNCATE(MAX(delSize),2) FROM Deliveries) AS Max,
+(SELECT TRUNCATE(AVG(delSize),2) FROM Deliveries) As Average;
 
 -- i) the Latin name of the plant that has the word 'Eyed' in its name (you must use LIKE in this query to get full credit)
+SELECT * FROM FlowersInfo WHERE comName LIKE '%Eyed%';
 
 -- j) the exact output (ordered by Category and then by Name)
+SELECT Deliveries.categ, FlowersInfo.comName
+FROM Deliveries
+INNER JOIN FlowersInfo ON Deliveries.id = FlowersInfo.deliver
+ORDER BY Deliveries.categ, FlowersInfo.comName;
