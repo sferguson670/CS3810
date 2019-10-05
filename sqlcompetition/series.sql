@@ -1,8 +1,8 @@
 --
 -- CS 3810 - Principles of Database Systems - Fall 2019
 -- SQL Competition: The "series" database
--- Date:
--- Team:
+-- Date: October 1, 2019
+-- Team: Ze Liu, Sarah Ferguson, Luis Ruis
 --
 
 -- database creation
@@ -142,10 +142,13 @@ INSERT INTO Watches VALUES (2, 1, 2, 'spring', 2014, 2);
 INSERT INTO Watches VALUES (2, 2, 1, 'fall', 2010, 5);
 
 -- query 01) return all actors/actresses sorted by actorId
+SELECT * FROM Actors ORDER BY actorId;
 
 -- query 02) return all actresses sorted by actorName
+SELECT * FROM Actors WHERE sex = "F" ORDER BY actorId;
 
 -- query 03) return the counts of actors and actress using two columns: 'sex' and 'total', sorted by sex
+SELECT sex AS Sex, COUNT(sex) AS Total FROM Actors GROUP BY sex;
 
 -- query 04) return the names of the actors/actresses that were in 'The Americans' sorted by actorName
 
@@ -166,6 +169,7 @@ INSERT INTO Watches VALUES (2, 2, 1, 'fall', 2010, 5);
 -- query 12) return the title of the series, their season number, season, and year of all series that didn't get watched by a user sorted by title, season number, season, and year
 
 -- query 13) return the names of the actors/actress whose names begin with the letter 'S' sorted by actorName
+SELECT actorName FROM Actors WHERE actorName LIKE '%S';
 
 -- query 14) return the seasons that were watched by more than one user, showing its series title, season number, season, year, and 'number of users' (referred to as 'users') sorted by title, season number, season, year, and users
 
