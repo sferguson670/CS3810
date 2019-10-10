@@ -151,6 +151,12 @@ SELECT * FROM Actors WHERE sex = "F" ORDER BY actorId;
 SELECT sex AS Sex, COUNT(sex) AS Total FROM Actors GROUP BY sex;
 
 -- query 04) return the names of the actors/actresses that were in 'The Americans' sorted by actorName
+SELECT Actors.actorName AS Names
+FROM Actors
+INNER JOIN Acts ON Actors.actorId = Acts.actorId
+INNER JOIN Series ON Series.seriesId = Acts.seriesId
+WHERE Series.title = "The Americans"
+ORDER BY Actors.actorName;
 
 -- query 05) return the names of actors/actresses that didn't appear in any series sorted by actorName
 
@@ -158,11 +164,23 @@ SELECT sex AS Sex, COUNT(sex) AS Total FROM Actors GROUP BY sex;
 
 -- query 07) the titles of all series followed by the 'total number of seasons that they had (referred to as 'seasons') sorted by title
 
--- query 08) return the title of the series that had at leason one season with less than 10 episodes sorted by title
+-- query 08) return the title of the series that had at least one one season with less than 10 episodes sorted by title
 
 -- query 09) return the title of all series watched by user 'Joe' sorted by title
+SELECT DISTINCT Series.title AS Title
+FROM Series
+INNER JOIN Watches ON Watches.seriesId = Series.seriesId
+INNER JOIN Users ON Users.userId = Watches.userId
+WHERE Users.userName = "Joe"
+ORDER BY Series.title;
 
 -- query 10) return the title of all series that had 'Keri Russell' sorted by title
+SELECT Series.title AS Title
+FROM Series
+INNER JOIN Acts ON Acts.seriesId = Series.seriesId
+INNER JOIN Actors ON Actors.actorId = Acts.actorId
+WHERE Actors.actorName = "Keri Russell"
+ORDER BY Series.title;
 
 -- query 11) return the title of the series, their season number, season, and year followed by the 'average rank number' (referred to as 'rnk') of all series based on the users ranks sorted by title, season number, season, and year
 
@@ -174,10 +192,20 @@ SELECT actorName FROM Actors WHERE actorName LIKE '%S';
 -- query 14) return the seasons that were watched by more than one user, showing its series title, season number, season, year, and 'number of users' (referred to as 'users') sorted by title, season number, season, year, and users
 
 -- query 15) return the name of the series that had seasons in the fall sorted by title
+SELECT DISTINCT Series.title AS Name
+FROM Series
+INNER JOIN Seasons on Seasons.seriesId = Series.seriesId
+WHERE Seasons.season = "fall"
+ORDER BY Series.title;
 
 -- query 16) return the name of the series that had the most number of episodes in a season
 
 -- query 17) return the name of the series that had seasons before 2010 sorted by title
+SELECT DISTINCT Series.title AS Name
+FROM Series
+INNER JOIN Seasons on Seasons.seriesId = Series.seriesId
+WHERE Seasons.year < 2010
+ORDER BY Series.title;
 
 -- query 18) return the title of the series that had seasons in the fall and in the spring sorted by title
 
