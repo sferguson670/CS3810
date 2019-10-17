@@ -1,11 +1,12 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.*;
 
-    public class books {
+public class books {
         public static void main(String[] args) throws Exception {
             String server = "localhost";
-            String database = "xyz";
-            String user = "xyz";
+            String database = "books";
+            String user = "book_admin";
             String password = "024680";
             String connectURL = "jdbc:mysql://" + server + "/" + database + "?serverTimezone=UTC&user=" + user + "&password=" + password;
 
