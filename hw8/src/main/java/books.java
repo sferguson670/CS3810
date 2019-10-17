@@ -1,5 +1,3 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.*;
 
 public class books {
@@ -13,6 +11,19 @@ public class books {
             // connects to the database
             Connection conn = DriverManager.getConnection(connectURL);
             System.out.println("Connection to MySQL database " + database + " was successful!");
+
+            // run a simple query
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT id, title, author FROM Books";
+            ResultSet resultSet = stmt.executeQuery(sql);
+
+            // navigate through the rows of the result set
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String author = resultSet.getString("author");
+                System.out.println(id + ", " + title + ", " + author);
+            }
 
             // closes the connection
             System.out.println("Bye!");
