@@ -74,5 +74,11 @@ INSERT INTO Items VALUES (404, 4, 1);
 INSERT INTO Items VALUES (404, 7, 3);
 
 -- create view 1 : OrdersTotalByMonth
+SELECT YEAR(date) AS year, MONTH(date) AS month, FLOOR(SUM(qtt = price)) AS total 
+FROM Orders 
+NATURAL JOIN Items 
+NATURAL JOIN Products 
+GROUP BY year, month 
+ORDER BY year, month;
 
 -- create view 2 : OrdersTotalByYear
