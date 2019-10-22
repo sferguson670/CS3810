@@ -1,12 +1,22 @@
+import java.io.FileInputStream;
 import java.sql.*;
+import java.util.*;
 
 public class books {
+
+    private static final String CONFIGURATION_FILE = "config.properties";
+
         public static void main(String[] args) throws Exception {
-            String server = "localhost";
-            String database = "books";
-            String user = "book_admin";
-            String password = "024680";
+            // open config.properties file
+            Properties prop = new Properties();
+            prop.load(new FileInputStream(CONFIGURATION_FILE));
+
+            String server = prop.getProperty("server");
+            String database = prop.getProperty("database");
+            String user = prop.getProperty("user");
+            String password = prop.getProperty("password");
             String connectURL = "jdbc:mysql://" + server + "/" + database + "?serverTimezone=UTC&user=" + user + "&password=" + password;
+            //System.out.println(server + " " + database + " " + user + " " + password + " " + connectURL);
 
             // connects to the database
             Connection conn = DriverManager.getConnection(connectURL);
