@@ -49,7 +49,10 @@ CREATE TABLE FlowersInfo(
 	cZone INTEGER,
 	hZone INTEGER,
 	deliver INTEGER,
-	sunNeeds VARCHAR(5)
+	sunNeeds VARCHAR(5),
+	FOREIGN KEY (cZone) REFERENCES Zones (id),
+	FOREIGN KEY (hZone) REFERENCES Zones (id),
+	FOREIGN KEY (deliver) REFERENCES Deliveries (id)
 );
 
 -- populate table FlowersInfo
@@ -72,7 +75,7 @@ SELECT COUNT(*) AS Total FROM Zones;
 SELECT cZone AS "Cool Zone", COUNT(cZone) AS Total FROM FlowersInfo GROUP BY cZone ORDER BY cZone;
 
 -- c) common names of the plants that have delivery sizes less than 5
-SELECT comName AS Name FROM FlowersInfo WHERE deliver < 5 ORDER BY comName;
+SELECT comName AS Name FROM FlowersInfo, Deliveries WHERE FlowersInfo.deliver = Deliveries.id AND delSize < 5 ORDER BY comName;
 
 -- d) common names of the plants that require full sun (i.e., sun needs contains 'S')
 SELECT comName AS Name FROM FlowersInfo WHERE sunNeeds = "S" ORDER BY comName;
