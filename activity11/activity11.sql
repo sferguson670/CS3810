@@ -67,4 +67,10 @@ SELECT * FROM Tracks;
 
 -- create a procedure called number_albums that shows the number of albums of a given artist
 
+-- call procedure
+CALL number_albums('Sepultura');
+
 -- create a procedure called albums_number_tracks that shows the year, title and number of tracks of each album of a given artist sorted by year and title
+
+-- call procedure
+CALL albums_number_tracks('Sepultura');
