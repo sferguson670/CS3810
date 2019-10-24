@@ -26,3 +26,6 @@ SELECT * FROM Sample WHERE rnd = 500;
 
 -- make sure to drop the index before timing a new sample
 DROP INDEX rnd ON Sample;
+
+-- delete data from table before adding a new sample
+DELETE FROM Sample;
