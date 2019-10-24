@@ -13,4 +13,16 @@ CREATE TABLE Sample (
 );
 
 -- replace ? by 1,2,3,or 4 depending which file you want to load
-LOAD DATA INFILE 'sample1.csv' INTO TABLE Sample FIELDS TERMINATED BY ',';
+LOAD DATA INFILE 'sample?.csv' INTO TABLE Sample FIELDS TERMINATED BY ',';
+
+-- query before indexing
+SELECT * FROM Sample WHERE rnd = 500;
+
+-- index commands
+CREATE INDEX rnd ON Sample(rnd);
+
+-- query after indexing
+SELECT * FROM Sample WHERE rnd = 500;
+
+-- make sure to drop the index before timing a new sample
+DROP INDEX rnd ON Sample;
