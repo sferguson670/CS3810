@@ -11,41 +11,42 @@ USE ipps;
 DROP TABLE IF EXISTS IPPS;
 
 CREATE TABLE DRGs (
-	code INTEGER PRIMARY KEY,
-	definition VARCHAR(30),
+	code INTEGER PRIMARY KEY NOT NULL,
+	definition VARCHAR(60)
 );
 
 CREATE TABLE Providers (
-	id INTEGER PRIMARY KEY,
-	name VARCHAR(30),
-	streetAddress VARCHAR(30),
-	city VARCHAR(30),
-	state VARCHAR(30),
-	zipCode VARCHAR(30),
+	id INTEGER PRIMARY KEY NOT NULL,
+	name VARCHAR(30) NOT NULL,
+	streetAddress VARCHAR(50),
+	city VARCHAR(20),
+	state VARCHAR(20),
+	zipCode INTEGER
 );
 
 CREATE TABLE Charges (
-	totalDischarges INTEGER PRIMARY KEY,
-	avgCoveredCharges DOUBLE,
-	avgTotalPayments DOUBLE,
-	avgMedicarePayments DOUBLE
+	totalDischarges INTEGER PRIMARY KEY NOT NULL,
+	avgCoveredCharges DECIMAL(11,2),
+	avgTotalPayments DECIMAL(11,2),
+	avgMedicarePayments DECIMAL(11,2)
 );
 
 CREATE TABLE HospitalReferralRegions (
-	code INTEGER PRIMARY KEY,
+	code INTEGER PRIMARY KEY NOT NULL,
 	description VARCHAR(30)
 );
 
 CREATE TABLE HospitalVisits (
-	drgCode INTEGER PRIMARY KEY,
+	drgCode INTEGER NOT NULL,
+	providerId INTEGER NOT NULL,
+	hospitalReferralRegionCode INTEGER NOT NULL,
+	totalDischarges INTEGER NOT NULL,
+	PRIMARY KEY (drgCode, providerId, hospitalReferralRegionCode, totalDischarges),
 	FOREIGN KEY (drgCode) REFERENCES DRGs (code),
-	providerId INTEGER PRIMARY KEY,
 	FOREIGN KEY (providerId) REFERENCES Providers (id),
-	hospitalReferralRegionCode INTEGER PRIMARY KEY,
-	FOREIGN KEY (hospitalReferralRegionCode) REFERENCES HospitalReferralRegions (code)
-	totalDischarges INTEGER PRIMARY KEY,
+	FOREIGN KEY (hospitalReferralRegionCode) REFERENCES HospitalReferralRegions (code),
 	FOREIGN KEY (totalDischarges) REFERENCES Charges (totalDischarges)
 );
 
-CREATE USER 'test_user' IDENTIFIED BY '032423';
-GRANT ALL ON TABLE ____ TO 'test_user';
+CREATE USER 'ipps' IDENTIFIED BY '032423';
+GRANT ALL ON TABLE ____ TO 'ipps';
