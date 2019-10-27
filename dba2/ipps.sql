@@ -32,7 +32,7 @@ CREATE TABLE Charges (
 );
 
 CREATE TABLE HospitalReferralRegions (
-	code INTEGER PRIMARY KEY NOT NULL,
+	code VARCHAR(5) PRIMARY KEY NOT NULL,
 	description VARCHAR(30)
 );
 
