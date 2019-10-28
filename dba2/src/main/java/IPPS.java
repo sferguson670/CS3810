@@ -5,12 +5,12 @@ import java.util.*;
 
 public class IPPS {
     private static final String CONFIGURATION_FILE = "config.properties";
-    static final String csv_file = "ipps_short.csv";
+    static final String csv_file = "ipps.csv";
     //instantiates lists
     private List drgKeys = new ArrayList();
     private List providerKeys = new ArrayList();
     private List hrrKeys = new ArrayList();
-    private List chargeKeys = new ArrayList();
+    private List hrrKeys2 = new ArrayList();
 
     public static void main(String[] args) throws Exception {
         //instantiate runner
@@ -112,8 +112,9 @@ public class IPPS {
      */
     public String getDRGInfo(String[] data) {
         String[] drgData = data[0].split("-");
-        Integer drgCode = Integer.parseInt(drgData[0].trim());
-        String drgDescription = drgData[1].trim();
+        String code = drgData[0].trim().replaceAll("^\"|\"$", "");
+        Integer drgCode = Integer.parseInt(code);
+        String drgDescription = drgData[1].trim().replaceAll("^\"|\"$", "");
 
         //if key isn't found, then add key to list, and return sqlInsert
         String sqlInsert = "";
@@ -126,16 +127,17 @@ public class IPPS {
 
     /*
      * Takes line data, splits into elements if necessary
-     * Checks to see if primary key exists, if not then prepares sql insert
+     * Checks to see if primary keys exists, if not then prepares sql insert
      */
     public String getHRRInfo(String[] data) {
         String[] hrrData = data[7].split("-");
         String hrrCode = hrrData[0].trim();
         String hrrDescription = hrrData[1].trim();
 
-        //if key isn't found, then add to list, and return sqlInsert
-        if (checkDuplicateString(hrrKeys, hrrDescription)==false) {
-            hrrKeys.add(hrrDescription);
+        //if keys isn't found, then add to list, and return sqlInsert
+        if ((checkDuplicateString(hrrKeys, hrrCode)==false) || (checkDuplicateString(hrrKeys2, hrrDescription)==false)) {
+            hrrKeys.add(hrrCode);
+            hrrKeys2.add(hrrDescription);
             return "INSERT INTO HospitalReferralRegions VALUES (\"" + hrrCode + "\" , \"" + hrrDescription + "\")";
         }
         return "";
@@ -156,7 +158,9 @@ public class IPPS {
         //if key isn't found, then add to list, and return sqlInsert
         if (checkDuplicate(providerKeys, providerId)==false) {
             providerKeys.add(providerId);
-            if (providerName.startsWith("\"")) {
+            if (providerName.startsWith("\"") && providerStreetAddress.startsWith("\"")) {
+                return "INSERT INTO Providers VALUES (" + providerId + ", " + providerName + " , " + providerStreetAddress + " , \"" + providerCity + "\" , \"" + providerState + "\" , " + providerZipCode + ")";
+            } else if (providerName.startsWith("\"")) {
                 return "INSERT INTO Providers VALUES (" + providerId + ", " + providerName + " , \"" + providerStreetAddress + "\" , \"" + providerCity + "\" , \"" + providerState + "\" , " + providerZipCode + ")";
             } else if (providerStreetAddress.startsWith("\"")) {
                 return "INSERT INTO Providers VALUES (" + providerId + ", \"" + providerName + "\" , " + providerStreetAddress + " , \"" + providerCity + "\" , \"" + providerState + "\" , " + providerZipCode + ")";
@@ -177,12 +181,7 @@ public class IPPS {
         Double averageTotalPayments = Double.parseDouble(data[10].trim());
         Double averageMedicarePayments = Double.parseDouble(data[11].trim());
 
-        //if key isn't found, then add to list, and return sqlInsert
-        if (checkDuplicateDouble(chargeKeys, averageTotalPayments)==false) {
-            providerKeys.add(totalDischarges);
-            return "INSERT INTO Charges VALUES (" + totalDischarges + ", " + averageCoveredCharges + ", " + averageTotalPayments + ", " + averageMedicarePayments + ")";
-        }
-        return "";
+        return "INSERT INTO Charges (totalDischarges, avgCoveredCharges, avgTotalPayments, avgMedicarePayments) VALUES (" + totalDischarges + ", " + averageCoveredCharges + ", " + averageTotalPayments + ", " + averageMedicarePayments + ")";
     }
 
     /*
@@ -207,18 +206,6 @@ public class IPPS {
         }
         return found;
     }
-
-    /*
-     * Checks to see if key (type double) exists in primary keys list
-     */
-    public boolean checkDuplicateDouble(List list, Double key) {
-        double actualKey = key.doubleValue();
-        boolean found = false;
-        if (list.contains(actualKey)) {
-            found = true;
-        }
-        return found;
-    }
 }
 
 /*
@@ -227,4 +214,5 @@ https://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-str
 https://examples.javacodegeeks.com/core-java/sql/jdbc-query-builder-tutorial/
 https://www.electrictoolbox.com/article/mysql/delete-all-data-mysql/
 https://stackoverflow.com/questions/3844595/how-can-i-make-java-print-quotes-like-hello
+https://stackoverflow.com/questions/2608665/how-can-i-trim-beginning-and-ending-double-quotes-from-a-string/25452078
  */
