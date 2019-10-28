@@ -42,7 +42,7 @@ public class IPPS {
                 String[] data = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 String statement = "";
 
-                //checks DRG
+                //sends data to DRG table
                 statement = runner.getDRGInfo(data);
                 if (statement.isEmpty()) {
                     //ignore and proceed
@@ -50,13 +50,37 @@ public class IPPS {
                     System.out.println(statement);
                     PreparedStatement prpStmt = conn.prepareStatement(statement);
                     prpStmt.execute();
-                    //Statement stmt = conn.createStatement();
-                    //ResultSet resultSet = stmt.executeQuery(statement);
                 }
-                //runner.getDRGInfo(data);
-                //runner.getHRRInfo(data);
-                //runner.getProviderInfo(data);
-                //runner.getChargeInfo(data);
+
+                //sends data to HRR table
+                statement = runner.getHRRInfo(data);
+                if (statement.isEmpty()) {
+                    //ignore and proceed
+                } else {
+                    System.out.println(statement);
+                    PreparedStatement prpStmt = conn.prepareStatement(statement);
+                    prpStmt.execute();
+                }
+
+                //sends data to Provider table
+                statement = runner.getProviderInfo(data);
+                if (statement.isEmpty()) {
+                    //ignore and proceed
+                } else {
+                    System.out.println(statement);
+                    PreparedStatement prpStmt = conn.prepareStatement(statement);
+                    prpStmt.execute();
+                }
+
+                //sends data to Charge table
+                statement = runner.getChargeInfo(data);
+                if (statement.isEmpty()) {
+                    //ignore and proceed
+                } else {
+                    System.out.println(statement);
+                    PreparedStatement prpStmt = conn.prepareStatement(statement);
+                    prpStmt.execute();
+                }
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
@@ -95,7 +119,7 @@ public class IPPS {
         String sqlInsert = "";
         if (checkDuplicate(drgKeys, drgCode)==false) {
             drgKeys.add(drgCode);
-            sqlInsert =  "INSERT INTO DRGs VALUES (" + drgCode + ", '" + drgDescription + "')";
+            sqlInsert =  "INSERT INTO DRGs VALUES (" + drgCode + ", \"" + drgDescription + "\")";
         }
         return sqlInsert;
     }
@@ -108,12 +132,11 @@ public class IPPS {
         String[] hrrData = data[7].split("-");
         String hrrCode = hrrData[0].trim();
         String hrrDescription = hrrData[1].trim();
-        //System.out.println(hrrCode + "\n" + hrrDescription);
 
         //if key isn't found, then add to list, and return sqlInsert
-        if (checkDuplicateString(hrrKeys, hrrCode)==false) {
-            hrrKeys.add(hrrCode);
-            return "INSERT INTO HospitalReferralRegions VALUES (?, ?)";
+        if (checkDuplicateString(hrrKeys, hrrDescription)==false) {
+            hrrKeys.add(hrrDescription);
+            return "INSERT INTO HospitalReferralRegions VALUES (\"" + hrrCode + "\" , \"" + hrrDescription + "\")";
         }
         return "";
     }
@@ -129,13 +152,17 @@ public class IPPS {
         String providerCity = data[4].trim();
         String providerState = data[5].trim();
         Integer providerZipCode = Integer.parseInt(data[6].trim());
-        System.out.println(providerId + " " + providerName + " " + providerStreetAddress + " " + providerCity + " " + providerState +
-                " " + providerZipCode);
 
         //if key isn't found, then add to list, and return sqlInsert
         if (checkDuplicate(providerKeys, providerId)==false) {
             providerKeys.add(providerId);
-            return "INSERT INTO Providers VALUES (?, ?)";
+            if (providerName.startsWith("\"")) {
+                return "INSERT INTO Providers VALUES (" + providerId + ", " + providerName + " , \"" + providerStreetAddress + "\" , \"" + providerCity + "\" , \"" + providerState + "\" , " + providerZipCode + ")";
+            } else if (providerStreetAddress.startsWith("\"")) {
+                return "INSERT INTO Providers VALUES (" + providerId + ", \"" + providerName + "\" , " + providerStreetAddress + " , \"" + providerCity + "\" , \"" + providerState + "\" , " + providerZipCode + ")";
+            } else {
+                return "INSERT INTO Providers VALUES (" + providerId + ", \"" + providerName + "\" , \"" + providerStreetAddress + "\" , \"" + providerCity + "\" , \"" + providerState + "\" , " + providerZipCode + ")";
+            }
         }
         return "";
     }
@@ -149,12 +176,11 @@ public class IPPS {
         Double averageCoveredCharges = Double.parseDouble(data[9].trim());
         Double averageTotalPayments = Double.parseDouble(data[10].trim());
         Double averageMedicarePayments = Double.parseDouble(data[11].trim());
-        System.out.println(totalDischarges + " " + averageCoveredCharges + " " + averageTotalPayments + " " + averageMedicarePayments);
 
         //if key isn't found, then add to list, and return sqlInsert
-        if (checkDuplicate(chargeKeys, totalDischarges)==false) {
+        if (checkDuplicateDouble(chargeKeys, averageTotalPayments)==false) {
             providerKeys.add(totalDischarges);
-            return "INSERT INTO Charges VALUES (?, ?)";
+            return "INSERT INTO Charges VALUES (" + totalDischarges + ", " + averageCoveredCharges + ", " + averageTotalPayments + ", " + averageMedicarePayments + ")";
         }
         return "";
     }
@@ -181,6 +207,18 @@ public class IPPS {
         }
         return found;
     }
+
+    /*
+     * Checks to see if key (type double) exists in primary keys list
+     */
+    public boolean checkDuplicateDouble(List list, Double key) {
+        double actualKey = key.doubleValue();
+        boolean found = false;
+        if (list.contains(actualKey)) {
+            found = true;
+        }
+        return found;
+    }
 }
 
 /*
@@ -188,4 +226,5 @@ resources used:
 https://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
 https://examples.javacodegeeks.com/core-java/sql/jdbc-query-builder-tutorial/
 https://www.electrictoolbox.com/article/mysql/delete-all-data-mysql/
+https://stackoverflow.com/questions/3844595/how-can-i-make-java-print-quotes-like-hello
  */

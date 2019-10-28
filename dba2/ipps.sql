@@ -17,7 +17,7 @@ CREATE TABLE DRGs (
 
 CREATE TABLE Providers (
 	id INTEGER PRIMARY KEY NOT NULL,
-	name VARCHAR(30) NOT NULL,
+	name VARCHAR(50) NOT NULL,
 	streetAddress VARCHAR(50),
 	city VARCHAR(20),
 	state VARCHAR(20),
@@ -25,27 +25,27 @@ CREATE TABLE Providers (
 );
 
 CREATE TABLE Charges (
-	totalDischarges INTEGER PRIMARY KEY NOT NULL,
+	totalDischarges INTEGER NOT NULL,
 	avgCoveredCharges DECIMAL(11,2),
-	avgTotalPayments DECIMAL(11,2),
+	avgTotalPayments DECIMAL(11,2) PRIMARY KEY,
 	avgMedicarePayments DECIMAL(11,2)
 );
 
 CREATE TABLE HospitalReferralRegions (
-	code VARCHAR(5) PRIMARY KEY NOT NULL,
-	description VARCHAR(30)
+	code VARCHAR(5) NOT NULL,
+	description VARCHAR(30) PRIMARY KEY
 );
 
 CREATE TABLE HospitalVisits (
 	drgCode INTEGER NOT NULL,
 	providerId INTEGER NOT NULL,
-	hospitalReferralRegionCode INTEGER NOT NULL,
-	totalDischarges INTEGER NOT NULL,
-	PRIMARY KEY (drgCode, providerId, hospitalReferralRegionCode, totalDischarges),
+	hospitalDescription VARCHAR(30) NOT NULL,
+	avgTotalPayments DECIMAL(11,2) NOT NULL,
+	PRIMARY KEY (drgCode, providerId, hospitalDescription, avgTotalPayments),
 	FOREIGN KEY (drgCode) REFERENCES DRGs (code),
 	FOREIGN KEY (providerId) REFERENCES Providers (id),
-	FOREIGN KEY (hospitalReferralRegionCode) REFERENCES HospitalReferralRegions (code),
-	FOREIGN KEY (totalDischarges) REFERENCES Charges (totalDischarges)
+	FOREIGN KEY (hospitalDescription) REFERENCES HospitalReferralRegions (description),
+	FOREIGN KEY (avgTotalPayments) REFERENCES Charges (avgTotalPayments)
 );
 
 CREATE USER 'ipps' IDENTIFIED BY '032423';
