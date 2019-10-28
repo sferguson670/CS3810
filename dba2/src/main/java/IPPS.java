@@ -6,7 +6,11 @@ import java.util.*;
 public class IPPS {
     private static final String CONFIGURATION_FILE = "config.properties";
     static final String csv_file = "ipps_short.csv";
-    private List drgKeys, providerKeys, hrrKeys, chargeKeys;
+    //instantiates lists
+    private List drgKeys = new ArrayList();
+    private List providerKeys = new ArrayList();
+    private List hrrKeys = new ArrayList();
+    private List chargeKeys = new ArrayList();
 
     public static void main(String[] args) throws Exception {
         //instantiate runner
@@ -21,7 +25,6 @@ public class IPPS {
         String user = prop.getProperty("user");
         String password = prop.getProperty("password");
         String connectURL = "jdbc:mysql://" + server + "/" + database + "?serverTimezone=UTC&user=" + user + "&password=" + password;
-        //System.out.println(server + " " + database + " " + user + " " + password + " " + connectURL);
 
         // connects to the database
         Connection conn = DriverManager.getConnection(connectURL);
@@ -37,10 +40,21 @@ public class IPPS {
             while (in.hasNextLine()) {
                 String line = in.nextLine();
                 String[] data = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                runner.getDRGInfo(data);
-                runner.getHRRInfo(data);
-                runner.getProviderInfo(data);
-                runner.getChargeInfo(data);
+                String statement = "";
+
+                //checks DRG
+                statement = runner.getDRGInfo(data);
+                if (statement.isEmpty()) {
+                    //ignore and proceed
+                } else {
+                    System.out.println(statement);
+                    //Statement stmt = conn.createStatement();
+                    //ResultSet resultSet = stmt.executeQuery(statement);
+                }
+                //runner.getDRGInfo(data);
+                //runner.getHRRInfo(data);
+                //runner.getProviderInfo(data);
+                //runner.getChargeInfo(data);
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
@@ -74,14 +88,14 @@ public class IPPS {
         String[] drgData = data[0].split("-");
         Integer drgCode = Integer.parseInt(drgData[0].trim());
         String drgDescription = drgData[1].trim();
-        //System.out.println(drgCode + "\n" + drgDescription);
 
         //if key isn't found, then add key to list, and return sqlInsert
-        if (checkDuplicate(drgKeys, drgCode)) {
+        String sqlInsert = "";
+        if (checkDuplicate(drgKeys, drgCode)==false) {
             drgKeys.add(drgCode);
-            return "INSERT INTO DRGs VALUES (?, ?)";
+            sqlInsert =  "INSERT INTO DRGs VALUES (" + drgCode + ", " + drgDescription + ")";
         }
-        return "";
+        return sqlInsert;
     }
 
     /*
@@ -95,7 +109,7 @@ public class IPPS {
         //System.out.println(hrrCode + "\n" + hrrDescription);
 
         //if key isn't found, then add to list, and return sqlInsert
-        if (checkDuplicateString(hrrKeys, hrrCode)) {
+        if (checkDuplicateString(hrrKeys, hrrCode)==false) {
             hrrKeys.add(hrrCode);
             return "INSERT INTO HospitalReferralRegions VALUES (?, ?)";
         }
@@ -117,7 +131,7 @@ public class IPPS {
                 " " + providerZipCode);
 
         //if key isn't found, then add to list, and return sqlInsert
-        if (checkDuplicate(providerKeys, providerId)) {
+        if (checkDuplicate(providerKeys, providerId)==false) {
             providerKeys.add(providerId);
             return "INSERT INTO Providers VALUES (?, ?)";
         }
@@ -136,7 +150,7 @@ public class IPPS {
         System.out.println(totalDischarges + " " + averageCoveredCharges + " " + averageTotalPayments + " " + averageMedicarePayments);
 
         //if key isn't found, then add to list, and return sqlInsert
-        if (checkDuplicate(chargeKeys, totalDischarges)) {
+        if (checkDuplicate(chargeKeys, totalDischarges)==false) {
             providerKeys.add(totalDischarges);
             return "INSERT INTO Charges VALUES (?, ?)";
         }
@@ -170,4 +184,6 @@ public class IPPS {
 /*
 resources used:
 https://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
+https://examples.javacodegeeks.com/core-java/sql/jdbc-query-builder-tutorial/
+https://www.electrictoolbox.com/article/mysql/delete-all-data-mysql/
  */
