@@ -38,7 +38,6 @@ CREATE TABLE HospitalReferralRegions (
 CREATE TABLE HospitalVisits (
     drgCode INTEGER NOT NULL,
     providerId INTEGER NOT NULL,
-    hospitalCode VARCHAR(5) NOT NULL,
     hospitalDescription VARCHAR(30) NOT NULL,
     chargeId INTEGER NOT NULL,
     PRIMARY KEY (drgCode, providerId, hospitalDescription, chargeId),

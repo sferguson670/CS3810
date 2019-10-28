@@ -14,6 +14,7 @@ public class IPPS {
     public static void main(String[] args) throws Exception {
         //instantiate runner
         IPPS runner = new IPPS();
+        int chargeId = 1;
 
         // open config.properties file
         Properties prop = new Properties();
@@ -41,7 +42,7 @@ public class IPPS {
                 String[] data = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 String statement = "";
 
-                //sends data to DRG table
+                //sends data to DRGs table
                 statement = runner.getDRGInfo(data);
                 if (statement.isEmpty()) {
                     //ignore and proceed
@@ -51,7 +52,7 @@ public class IPPS {
                     prpStmt.execute();
                 }
 
-                //sends data to HRR table
+                //sends data to HospitalReferralRegions table
                 statement = runner.getHRRInfo(data);
                 if (statement.isEmpty()) {
                     //ignore and proceed
@@ -61,7 +62,7 @@ public class IPPS {
                     prpStmt.execute();
                 }
 
-                //sends data to Provider table
+                //sends data to Providers table
                 statement = runner.getProviderInfo(data);
                 if (statement.isEmpty()) {
                     //ignore and proceed
@@ -80,25 +81,21 @@ public class IPPS {
                     PreparedStatement prpStmt = conn.prepareStatement(statement);
                     prpStmt.execute();
                 }
+
+                //sends data to HospitalVisits table
+                statement = runner.getHospitalVisitInfo(data, chargeId);
+                if (statement.isEmpty()) {
+                    //ignore and proceed
+                } else {
+                    System.out.println(statement);
+                    PreparedStatement prpStmt = conn.prepareStatement(statement);
+                    prpStmt.execute();
+                    chargeId++;
+                }
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
         }
-
-        /*
-        // run a simple query
-        Statement stmt = conn.createStatement();
-        String sql = "SELECT id, title, author FROM Books";
-        ResultSet resultSet = stmt.executeQuery(sql);
-
-        // navigate through the rows of the result set
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String title = resultSet.getString("title");
-            String author = resultSet.getString("author");
-            System.out.println(id + ", " + title + ", " + author);
-        }
-         */
 
         // closes the connection
         System.out.println("Bye!");
@@ -171,6 +168,20 @@ public class IPPS {
         Double averageTotalPayments = Double.parseDouble(data[10].trim());
         Double averageMedicarePayments = Double.parseDouble(data[11].trim());
         return "INSERT INTO Charges (totalDischarges, avgCoveredCharges, avgTotalPayments, avgMedicarePayments) VALUES (" + totalDischarges + ", " + averageCoveredCharges + ", " + averageTotalPayments + ", " + averageMedicarePayments + ")";
+    }
+
+    /*
+     * Takes line data, splits into elements if necessary
+     * Will insert all data since primary key for charge id is auto-incremented
+     */
+    public String getHospitalVisitInfo(String[] data, int chargeId) {
+        String[] drgData = data[0].split("-");
+        String code = drgData[0].trim().replaceAll("^\"|\"$", "");
+        Integer providerId = Integer.parseInt(data[1].trim());
+        Integer drgCode = Integer.parseInt(code);
+        String[] hrrData = data[7].split("-");
+        String hrrDescription = hrrData[1].trim();
+        return "INSERT INTO HospitalVisits VALUES (" + drgCode + ", " + providerId + ", \"" + hrrDescription + "\" , " + chargeId + ")";
     }
 
     /*
