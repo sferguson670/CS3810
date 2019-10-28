@@ -32,8 +32,7 @@ CREATE TABLE Charges (
 
 CREATE TABLE HospitalReferralRegions (
 	code VARCHAR(5) NOT NULL,
-	description VARCHAR(30) NOT NULL,
-	PRIMARY KEY (code, description)
+	description VARCHAR(30) NOT NULL PRIMARY KEY
 );
 
 CREATE TABLE HospitalVisits (
@@ -42,10 +41,9 @@ CREATE TABLE HospitalVisits (
     hospitalCode VARCHAR(5) NOT NULL,
     hospitalDescription VARCHAR(30) NOT NULL,
     chargeId INTEGER NOT NULL,
-    PRIMARY KEY (drgCode, providerId, hospitalCode, hospitalDescription, chargeId),
+    PRIMARY KEY (drgCode, providerId, hospitalDescription, chargeId),
     FOREIGN KEY (drgCode) REFERENCES DRGs (code),
     FOREIGN KEY (providerId) REFERENCES Providers (id),
-    FOREIGN KEY (hospitalCode) REFERENCES HospitalReferralRegions (code),
     FOREIGN KEY (hospitalDescription) REFERENCES HospitalReferralRegions (description),
     FOREIGN KEY (chargeId) REFERENCES Charges (chargeId)
 );

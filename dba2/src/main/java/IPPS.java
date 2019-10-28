@@ -10,7 +10,6 @@ public class IPPS {
     private List drgKeys = new ArrayList();
     private List providerKeys = new ArrayList();
     private List hrrKeys = new ArrayList();
-    private List hrrKeys2 = new ArrayList();
 
     public static void main(String[] args) throws Exception {
         //instantiate runner
@@ -135,9 +134,8 @@ public class IPPS {
         String hrrDescription = hrrData[1].trim();
 
         //if keys isn't found, then add to list, and return sqlInsert
-        if ((checkDuplicateString(hrrKeys, hrrCode)==false) || (checkDuplicateString(hrrKeys2, hrrDescription)==false)) {
-            hrrKeys.add(hrrCode);
-            hrrKeys2.add(hrrDescription);
+        if (checkDuplicateString(hrrKeys, hrrDescription)==false) {
+            hrrKeys.add(hrrDescription);
             return "INSERT INTO HospitalReferralRegions VALUES (\"" + hrrCode + "\" , \"" + hrrDescription + "\")";
         }
         return "";
@@ -149,8 +147,8 @@ public class IPPS {
      */
     public String getProviderInfo(String[] data) {
         Integer providerId = Integer.parseInt(data[1].trim());
-        String providerName = data[2].trim();
-        String providerStreetAddress = data[3].trim();
+        String providerName = data[2].trim().replaceAll("^\"|\"$", "");;
+        String providerStreetAddress = data[3].trim().replaceAll("^\"|\"$", "");;
         String providerCity = data[4].trim();
         String providerState = data[5].trim();
         Integer providerZipCode = Integer.parseInt(data[6].trim());
@@ -158,15 +156,7 @@ public class IPPS {
         //if key isn't found, then add to list, and return sqlInsert
         if (checkDuplicate(providerKeys, providerId)==false) {
             providerKeys.add(providerId);
-            if (providerName.startsWith("\"") && providerStreetAddress.startsWith("\"")) {
-                return "INSERT INTO Providers VALUES (" + providerId + ", " + providerName + " , " + providerStreetAddress + " , \"" + providerCity + "\" , \"" + providerState + "\" , " + providerZipCode + ")";
-            } else if (providerName.startsWith("\"")) {
-                return "INSERT INTO Providers VALUES (" + providerId + ", " + providerName + " , \"" + providerStreetAddress + "\" , \"" + providerCity + "\" , \"" + providerState + "\" , " + providerZipCode + ")";
-            } else if (providerStreetAddress.startsWith("\"")) {
-                return "INSERT INTO Providers VALUES (" + providerId + ", \"" + providerName + "\" , " + providerStreetAddress + " , \"" + providerCity + "\" , \"" + providerState + "\" , " + providerZipCode + ")";
-            } else {
-                return "INSERT INTO Providers VALUES (" + providerId + ", \"" + providerName + "\" , \"" + providerStreetAddress + "\" , \"" + providerCity + "\" , \"" + providerState + "\" , " + providerZipCode + ")";
-            }
+            return "INSERT INTO Providers VALUES (" + providerId + ", \"" + providerName + "\" , \"" + providerStreetAddress + "\" , \"" + providerCity + "\" , \"" + providerState + "\" , " + providerZipCode + ")";
         }
         return "";
     }
@@ -180,7 +170,6 @@ public class IPPS {
         Double averageCoveredCharges = Double.parseDouble(data[9].trim());
         Double averageTotalPayments = Double.parseDouble(data[10].trim());
         Double averageMedicarePayments = Double.parseDouble(data[11].trim());
-
         return "INSERT INTO Charges (totalDischarges, avgCoveredCharges, avgTotalPayments, avgMedicarePayments) VALUES (" + totalDischarges + ", " + averageCoveredCharges + ", " + averageTotalPayments + ", " + averageMedicarePayments + ")";
     }
 
