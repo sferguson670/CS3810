@@ -49,4 +49,8 @@ CREATE TABLE HospitalVisits (
 );
 
 CREATE USER 'ipps' IDENTIFIED BY '032423';
-GRANT ALL ON TABLE ____ TO 'ipps';
+GRANT ALL ON TABLE DRGs TO 'ipps';
+GRANT ALL ON TABLE Providers TO 'ipps';
+GRANT ALL ON TABLE Charges TO 'ipps';
+GRANT ALL ON TABLE HospitalReferralRegions TO 'ipps';
+GRANT ALL ON TABLE HospitalVisits TO 'ipps';

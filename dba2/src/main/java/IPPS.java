@@ -48,6 +48,8 @@ public class IPPS {
                     //ignore and proceed
                 } else {
                     System.out.println(statement);
+                    PreparedStatement prpStmt = conn.prepareStatement(statement);
+                    prpStmt.execute();
                     //Statement stmt = conn.createStatement();
                     //ResultSet resultSet = stmt.executeQuery(statement);
                 }
@@ -93,7 +95,7 @@ public class IPPS {
         String sqlInsert = "";
         if (checkDuplicate(drgKeys, drgCode)==false) {
             drgKeys.add(drgCode);
-            sqlInsert =  "INSERT INTO DRGs VALUES (" + drgCode + ", " + drgDescription + ")";
+            sqlInsert =  "INSERT INTO DRGs VALUES (" + drgCode + ", '" + drgDescription + "')";
         }
         return sqlInsert;
     }
