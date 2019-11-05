@@ -1,4 +1,8 @@
-{
+use blog
+
+db.createCollection("posts")
+
+db.posts.insert{
     "author" : "Sam Mai Tai",
     "created_at" : ISODate("2017-11-03T00:00:00Z"),
     "content" : "The pessimist sees difficulty in every opportunity. The optimist sees the opportunity in every difficulty.",
@@ -9,7 +13,7 @@
     ]
 }
 
-{
+db.posts.insert{
     "author" : "Sam Mai Tai",
     "created_at" : ISODate("2017-11-03T09:30:00Z"),
     "content" : "Age is a case of mind over matter. If you don't mind, it don't matter.",
@@ -20,7 +24,7 @@
     ]
 }
 
-{
+db.posts.insert{
     "author" : "Sam Mai Tai",
     "created_at" : ISODate("2017-11-04T00:00:00Z"),
     "content" : "Failure will never overtake me if my determination to succeed is strong enough.",
@@ -30,7 +34,7 @@
     ]
 }
 
-{
+db.posts.insert{
     "author" : "Morbid Mojito",
     "created_at" : ISODate("2017-11-04T00:00:00Z"),
     "content" : "Only I can change my life. No one can do it for me.",
@@ -39,7 +43,7 @@
     ]
 }
 
-{
+db.posts.insert{
     "author" : "Morbid Mojito",
     "created_at" : ISODate("2017-11-07T00:00:00Z"),
     "content" : "Smile in the mirror. Do that every morning and you'll start to see a big difference in your life",
