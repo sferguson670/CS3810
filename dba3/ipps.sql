@@ -63,13 +63,13 @@ LOAD DATA INFILE 'ChargesAndPayments.csv' INTO TABLE ChargesAndPayments FIELDS T
 
 -- TODO: answer the following queries
 
--- a) List all diagnostic names in alphabetical order (no repetition).
+-- a) List all diagnostic names in alphabetical order.
 
--- b) List the names and correspondent states of all of the providers in alphabetical order (state first, provider name next, no repetition).
+-- b) List the names and correspondent states (including Washington D.C.) of all of the providers in alphabetical order (state first, provider name next, no repetition).
 
 -- c) List the number of (distinct) providers.
 
--- d) List the number of (distinct) providers per state in alphabetical order (also printing out the state).
+-- d) List the number of (distinct) providers per state (including Washington D.C.) in alphabetical order (also printing out the state).
 
 -- e) List the number of (distinct) hospital referral regions (HRR).
 
@@ -77,8 +77,8 @@ LOAD DATA INFILE 'ChargesAndPayments.csv' INTO TABLE ChargesAndPayments FIELDS T
 
 -- g) List all of the (distinct) providers in the state of Pennsylvania in alphabetical order.
 
--- h) List the top 10 providers (with their correspondent state) that charged the most for the clinical condition with code 308. Output should display the provider, their state, and the average charged amount in descending order.
+-- h) List the top 10 providers (with their correspondent state) that charged  (as described in avgTotalPayments) the most for the diagnose with code 308. Output should display the provider, their state, and the average charged amount in descending order.
 
--- i) List the average charges of all providers per state for the clinical condition with code 308. Output should display the state and the average charged amount per state in descending order (of the charged amount) using only two decimals.
+-- i) List the average charges (as described in avgTotalPayments) of all providers per state for the clinical condition with code 308. Output should display the state and the average charged amount per state in descending order (of the charged amount) using only two decimals.
 
--- j) Which hospital and clinical condition pair had the highest difference between the amount charged and the amount covered by health insurance?
+-- j) Which hospital and clinical condition pair had the highest difference between the amount charged  (as described in avgTotalPayments) and the amount covered by Medicare  (as described in avgMedicarePayments)?
